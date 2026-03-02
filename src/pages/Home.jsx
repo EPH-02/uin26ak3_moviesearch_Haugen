@@ -5,7 +5,8 @@ import { useState } from "react"
 export default function Home(){
     const [search, setSearch] = useState()
     const baseUrl = `http://www.omdbapi.com/?s=${search}&apikey=`
-    const apiKey = '8f4ddb22'
+    // BRA PRATICE: Legg API key i .env fil og hent den derfra, slik at den ikke ligger i koden
+    const apiKey = import.meta.env.VITE_APP_API_KEY
 
     const getMovies = async()=>{
         try{
@@ -21,6 +22,11 @@ export default function Home(){
     const handleChange = (e)=>{
         setSearch(e.target.value)
     }
+
+    const handleSubmit = (e)=>{
+        e.preventDefault()
+        getMovies()
+    }
     
     return(
         <main>
@@ -30,8 +36,9 @@ export default function Home(){
                     Søk etter film
                     <input type="search" placeholder="Indiana Jones" onChange={handleChange}></input>
                 </label>
+                <button onClick={getMovies}>Søk</button>
             </form>
-            <button onClick={getMovies}>Søk</button>
+           
         </main>
     )
 }
