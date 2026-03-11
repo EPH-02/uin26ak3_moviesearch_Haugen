@@ -13,10 +13,10 @@ export default function Home(){
 
     // console.log("denne kommer fra storage", storedHistory)
 
-    const baseUrl = `http://www.omdbapi.com/?s=${trimmedSearch}&apikey=` 
+    const baseUrl = `http://www.omdbapi.com/?s=${trimmedSearch}&apikey=`
     // BRA PRATICE: Legg API key i .env fil og hent den derfra, slik at den ikke ligger i koden
     const apiKey = import.meta.env.VITE_APP_API_KEY
-
+    console.log(baseUrl)
     // useEffect(()=> {
     //     localStorage.setItem("search", JSON.stringify(history))
     // }, [history])
@@ -45,7 +45,7 @@ export default function Home(){
         e.target.reset()
        
         //setHistory((prev) => [...prev, trimmedSearch]) 
-        getMovies()
+        getMovies() 
     }
     
     //console.log(history)
@@ -59,7 +59,7 @@ export default function Home(){
                     <input type="search" placeholder="Batman" onChange={handleChange} onFocus={()=> setFocused(true)} onBlur={()=> setFocused(false)}></input>
                 </label>   
             {/* {focused ? <History history={history} setSearch={setSearch} /> : null} */}
-                <button type="submit" disabled={!canSearch}>Søk</button> 
+                <button type="submit" disabled={!canSearch}>Søk</button> {/* Knappen være deaktivert dersom søket ikke er gyldig, for å unngå unødvendige API kall */}
             </form>
         </main>
     )
