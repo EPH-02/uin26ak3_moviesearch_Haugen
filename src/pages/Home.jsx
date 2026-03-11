@@ -1,5 +1,5 @@
-import { useState } from "react"
-import History from "../components/History"
+import { useEffect, useState } from "react"
+import MovieCard from "../components/MovieCard"
 
 
 export default function Home(){
@@ -7,13 +7,11 @@ export default function Home(){
     // const storedHistory = localStorage.getItem("search")
     // const [history, setHistory] = useState(storedHistory ? JSON.parse(storedHistory) : [])
     const [searchResults, setSearchResult] = useState([])
-    const [focused, setFocused] = useState(false)
     const trimmedSearch = search?.trim() ?? "" // Sjekker om search er null eller undefined, legger til tom streng dersom det stemmer
     const canSearch = trimmedSearch.length >= 3 // Sjekker at søket er minst 3 tegn, for å unngå unødvendig API kall
 
     // console.log("denne kommer fra storage", storedHistory)
 
-    const baseUrl = `http://www.omdbapi.com/?s=${trimmedSearch}&apikey=`
     // BRA PRATICE: Legg API key i .env fil og hent den derfra, slik at den ikke ligger i koden
     const apiKey = import.meta.env.VITE_APP_API_KEY
 
@@ -21,17 +19,26 @@ export default function Home(){
     //     localStorage.setItem("search", JSON.stringify(history))
     // }, [history])
 
-    const getMovies = async()=>{
-        if (!canSearch) return // Sjekker at søket er gyldig før vi det kjøres et API kall. Funksjonen vil avlsutte dersom søket ikker er gyldig
-
+    const fetchMovies = async(query)=>{
         try{
-            const response = await fetch(`${baseUrl}${apiKey}`)
+            const response = await fetch(`http://www.omdbapi.com/?s=${query}&apikey=${apiKey}`)
             const data = await response.json()
+            setSearchResult(data.Search ?? []) // Sjekker om data.Search er null eller undefined, legger til tom array dersom det stemmer, for å unngå feil når vi prøver å mappe over searchResults
             console.log(data)
         }
         catch(err){
             console.error(err);
         }
+    }
+
+    useEffect(() => {
+        fetchMovies("james bond")
+    }, [])
+
+    const getMovies = async()=>{
+        if (!canSearch) return // Sjekker at søket er gyldig før vi det kjøres et API kall. Funksjonen vil avlsutte dersom søket ikker er gyldig
+
+        fetchMovies(trimmedSearch)
     }
     
     const handleChange = (e)=>{
@@ -56,11 +63,15 @@ export default function Home(){
             <form onSubmit={handleSubmit}>
                 <label>
                     Søk etter film
-                    <input type="search" placeholder="Batman" onChange={handleChange} onFocus={()=> setFocused(true)} onBlur={()=> setFocused(false)}></input>
+                    <input type="search" placeholder="Batman" onChange={handleChange}></input>
                 </label>   
-            {/* {focused ? <History history={history} setSearch={setSearch} /> : null} */}
                 <button type="submit" disabled={!canSearch}>Søk</button> {/* Knappen være deaktivert dersom søket ikke er gyldig, for å unngå unødvendige API kall */}
             </form>
+            <section>
+                {searchResults.map((movie) => ( // Mapper over searchResults og rendrer en MovieCard for hver film i resultatene
+                    <MovieCard key={movie.imdbID} movie={movie} /> //Bruker imdbID som key, da den er unik for hver film
+                ))}
+            </section>
         </main>
     )
 }
