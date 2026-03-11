@@ -6,7 +6,7 @@ export default function Home(){
     const [search, setSearch] = useState()
     // const storedHistory = localStorage.getItem("search")
     // const [history, setHistory] = useState(storedHistory ? JSON.parse(storedHistory) : [])
-    const [history, setHistory] = useState([])
+    const [searchResults, setSearchResult] = useState([])
     const [focused, setFocused] = useState(false)
     const trimmedSearch = search?.trim() ?? "" // Sjekker om search er null eller undefined, legger til tom streng dersom det stemmer
     const canSearch = trimmedSearch.length >= 3 // Sjekker at søket er minst 3 tegn, for å unngå unødvendig API kall
@@ -16,7 +16,7 @@ export default function Home(){
     const baseUrl = `http://www.omdbapi.com/?s=${trimmedSearch}&apikey=`
     // BRA PRATICE: Legg API key i .env fil og hent den derfra, slik at den ikke ligger i koden
     const apiKey = import.meta.env.VITE_APP_API_KEY
-    console.log(baseUrl)
+
     // useEffect(()=> {
     //     localStorage.setItem("search", JSON.stringify(history))
     // }, [history])
