@@ -19,7 +19,7 @@ export default function Home(){
     //     localStorage.setItem("search", JSON.stringify(history))
     // }, [history])
 
-    const fetchMovies = async(query)=>{
+    const fetchMovies = async(query)=>{ // Funksjon for å hente filmer fra API 
         try{
             const response = await fetch(`http://www.omdbapi.com/?s=${query}&apikey=${apiKey}`)
             const data = await response.json()
@@ -31,7 +31,7 @@ export default function Home(){
         }
     }
 
-    useEffect(() => {
+    useEffect(() => { // 
         fetchMovies("james bond")
     }, [])
 
