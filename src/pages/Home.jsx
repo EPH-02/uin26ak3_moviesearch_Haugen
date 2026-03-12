@@ -3,40 +3,52 @@ import MovieCard from "../components/MovieCard"
 
 
 export default function Home(){
-    const [search, setSearch] = useState()
-    // const storedHistory = localStorage.getItem("search")
-    // const [history, setHistory] = useState(storedHistory ? JSON.parse(storedHistory) : [])
+    const [search, setSearch] = useState("")
     const [searchResults, setSearchResult] = useState([])
-    const trimmedSearch = search?.trim() ?? "" // Sjekker om search er null eller undefined, legger til tom streng dersom det stemmer
-    const canSearch = trimmedSearch.length >= 3 // Sjekker at søket er minst 3 tegn, for å unngå unødvendig API kall
-
-    // console.log("denne kommer fra storage", storedHistory)
-
-    // BRA PRATICE: Legg API key i .env fil og hent den derfra, slik at den ikke ligger i koden
+    const [errorMessage, setErrorMessage] = useState("")
+    const trimmedSearch = search.trim()
+    // Hindrer API-kall før brukeren faktisk har skrevet et meningsfullt søk.
+    const canSearch = trimmedSearch.length >= 3
     const apiKey = import.meta.env.VITE_APP_API_KEY
-
-    // useEffect(()=> {
-    //     localStorage.setItem("search", JSON.stringify(history))
-    // }, [history])
 
     const fetchMovies = async(query)=>{ // Funksjon for å hente filmer fra API 
         try{
-            const response = await fetch(`http://www.omdbapi.com/?s=${query}&apikey=${apiKey}`)
+            setErrorMessage("")
+            // encodeURIComponent gjør at søk med mellomrom og spesialtegn blir gyldige i URL-en.
+            const response = await fetch(`https://www.omdbapi.com/?s=${encodeURIComponent(query)}&type=movie&apikey=${apiKey}`)
             const data = await response.json()
-            setSearchResult(data.Search ?? []) // Sjekker om data.Search er null eller undefined, legger til tom array dersom det stemmer, for å unngå feil når vi prøver å mappe over searchResults
-            console.log(data)
+
+            if (data.Response === "False") {
+                setSearchResult([])
+                setErrorMessage(data.Error ?? "Fant ingen filmer.")
+                return
+            }
+
+            // Filtrerer bort spill og dedupliserer på imdbID før rendering.
+            const uniqueMovies = Array.from(
+                new Map(
+                    (data.Search ?? [])
+                        .filter((movie) => movie.Type === "movie")
+                        .map((movie) => [movie.imdbID, movie])
+                ).values()
+            )
+
+            setSearchResult(uniqueMovies)
         }
         catch(err){
+            setSearchResult([])
+            setErrorMessage("Noe gikk galt under søket.")
             console.error(err);
         }
     }
 
-    useEffect(() => { // 
-        fetchMovies("james bond")
+    // Laster en startliste slik at forsiden ikke er tom første gang appen åpnes.
+    useEffect(() => {
+        fetchMovies("james bond 007")
     }, [])
 
     const getMovies = async()=>{
-        if (!canSearch) return // Sjekker at søket er gyldig før vi det kjøres et API kall. Funksjonen vil avlsutte dersom søket ikker er gyldig
+        if (!canSearch) return
 
         fetchMovies(trimmedSearch)
     }
@@ -47,15 +59,12 @@ export default function Home(){
 
     const handleSubmit = (e)=>{
         e.preventDefault()
-        if (!canSearch) return // Sjekker om søket er gyldig om søket er 3 tegn eller mer, dersom ikke vil funksjonen avslutte og API kall vil ikke bli utført
+        if (!canSearch) return
 
-        e.target.reset()
-       
-        //setHistory((prev) => [...prev, trimmedSearch]) 
         getMovies() 
+        // Tømmer inputfeltet etter et vellykket søk, men beholder resultatlisten.
+        setSearch("")
     }
-    
-    //console.log(history)
 
     return(
         <main>
@@ -63,13 +72,19 @@ export default function Home(){
             <form onSubmit={handleSubmit}>
                 <label>
                     Søk etter film
-                    <input type="search" placeholder="Batman" onChange={handleChange}></input>
+                    <input
+                        type="search"
+                        placeholder="James Bond"
+                        value={search}
+                        onChange={handleChange}
+                    />
                 </label>   
-                <button type="submit" disabled={!canSearch}>Søk</button> {/* Knappen være deaktivert dersom søket ikke er gyldig, for å unngå unødvendige API kall */}
+                <button type="submit" disabled={!canSearch}>Søk</button>
             </form>
+            {errorMessage ? <p>{errorMessage}</p> : null}
             <section>
-                {searchResults.map((movie) => ( // Mapper over searchResults og rendrer en MovieCard for hver film i resultatene
-                    <MovieCard key={movie.imdbID} movie={movie} /> //Bruker imdbID som key, da den er unik for hver film
+                {searchResults.map((movie) => (
+                    <MovieCard key={movie.imdbID} movie={movie} />
                 ))}
             </section>
         </main>
