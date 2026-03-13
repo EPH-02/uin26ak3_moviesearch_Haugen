@@ -28,9 +28,7 @@ export default function Home(){
             const uniqueMovies = Array.from(
                 new Map(
                     (data.Search ?? [])
-                        .filter((movie) => movie.Type === "movie")
-                        .map((movie) => [movie.imdbID, movie])
-                ).values()
+                        .filter((movie) => movie.Type === "movie").map((movie) => [movie.imdbID, movie])).values()
             )
 
             setSearchResult(uniqueMovies)
