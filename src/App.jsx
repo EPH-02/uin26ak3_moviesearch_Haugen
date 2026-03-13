@@ -13,7 +13,7 @@ function App() {
     <Layout>
       <Routes>
         <Route index element={<Home />} />
-        <Route path=":movie" element={<Movie/>} /> 
+        <Route path=":movieId" element={<Movie/>} /> 
       </Routes>
     </Layout>
     

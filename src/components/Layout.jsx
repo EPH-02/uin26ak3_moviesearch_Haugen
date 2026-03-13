@@ -10,7 +10,9 @@ export default function Layout({children}){
             </nav>
         </header>
         
-        {children}
+        <main>
+            {children}
+        </main>
         </>
     )
 }

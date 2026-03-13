@@ -9,7 +9,7 @@ export default function Home(){
     const trimmedSearch = search.trim()
     // Hindrer API-kall før brukeren faktisk har skrevet et meningsfullt søk.
     const canSearch = trimmedSearch.length >= 3
-    const apiKey = import.meta.env.VITE_APP_API_KEY
+    const apiKey = import.meta.env.VITE_OMBD_API_KEY
 
     const fetchMovies = async(query)=>{ // Funksjon for å hente filmer fra API 
         try{
