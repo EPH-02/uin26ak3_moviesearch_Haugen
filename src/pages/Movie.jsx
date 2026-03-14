@@ -3,42 +3,48 @@ import { useParams, useLocation } from "react-router-dom"
 
 
 export default function Movie(){
-    const { movieId } = useParams() // movieId er imbdID
+    const { movieId } = useParams() // movieId er imdbID
     const location = useLocation()
-    const imbdId = location.state?.imbdId
-    const [movie, setMovie] = useState(location.state?.movie || null)
+
+    const imdbID = location.state?.imdbID || movieId // Fallback til URL-parametere dersom state ikke er tilgjengelig, for bedre støtte ved direkte URL-tilgang.
+
+    const [movie, setMovie] = useState(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
+
     const apiKey = import.meta.env.VITE_OMBD_API_KEY
 
-
-
     useEffect(() => {
-        if (!imbdId) return
-            async function fetchMovie() {
-                    setLoading(true)
+        if (!imdbID) return
+        
+               const fetchMovie = async () => {
                     try {
-                        const res = await fetch(`https://www.omdbapi.com/?apikey=${apikey}&i=${movieId}&plot=full`)
+                        setLoading(true)
+                        const res = await fetch(`https://www.omdbapi.com/?apikey=${apiKey}&i=${imdbID}&plot=full`)
                         const data = await res.json()
                         if (data.Response === 'True') {setMovie(data)}
                         else {setError('Fant ikke filmen')}
-                    } catch (err) {
+                    } catch {
                         setError('Noe gikk galt')
                     } finally {
                     setLoading(false)
-            }
-        }
+                    }   
+                }
         fetchMovie()
-    }, [imbdId])
+    }, [imdbID])
+
+        if (loading) return <p>Laster...</p>
+        if (error) return <p>{error}</p>
+        if (!movie) return null
 
     return(
             <article>
                 <h1>{movie?.Title ?? "Movie"}</h1>
-                {movie?.Poster && movie.Poster !== "N/A" ? (
-            <img src={movie?.Poster} alt={`Plakat for ${movie.Title}`} />
-                ) : (
-                    <p>Ingen plakat</p>
-                )}
+            <img 
+                src={movie?.Poster !== "N/A" ? movie.Poster : "/no-poster.png"} 
+                alt={`Plakat for ${movie.Title}`}
+                onError={(e) => {e.currentTarget.src = "/no-poster.png"}} />
+         
                 <section>
                     <p><strong>År:</strong> {movie?.Year}</p>
                     <p><strong>Sjanger:</strong> {movie?.Genre}</p>

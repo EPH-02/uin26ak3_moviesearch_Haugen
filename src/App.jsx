@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Movie from './pages/Movie'
 import Home from './pages/Home'
-import './App.css'
+import '../src/styles/stylesheet.css'
 import Layout from './components/Layout'
 
 function App() {

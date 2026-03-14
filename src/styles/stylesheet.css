@@ -1,0 +1,44 @@
+/* layout */
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* søk */
+form {
+  margin-bottom: 1.5rem;
+}
+
+input {
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+/* film grid */
+section {
+  display: flex;
+  gap: 1rem;
+  max-width: 100%;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+/* filmkort */
+.movieCard {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+/* bilder */
+img {
+  width: 100%;
+  height: auto;
+}
+
+/* lenker */
+a {
+  text-decoration: none;
+  color: inherit;
+}

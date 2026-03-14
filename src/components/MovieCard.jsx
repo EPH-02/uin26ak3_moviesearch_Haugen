@@ -1,20 +1,17 @@
 import { Link } from "react-router-dom"
 
 export default function MovieCard({ movie }){
-    const posterUrl = movie.Poster && movie.Poster !== "N/A" ? movie.Poster : null
     const slug = movie.Title.toLowerCase().replaceAll(" ", "-")
 
     return(
         <article className="movieCard">  
                 <Link to={`/${slug}`} state={{ imdbID: movie.imdbID }}>{/* Bruker imdbID i URL slik at detaljsiden kan hente riktig film */}
-                {posterUrl ? ( // Sjekker etter plakat om den er tilgjenglig og viser "N/A" om den ikke finnes i API spørrigen (AI)
-                    <img src={posterUrl} alt={movie.Title} /> // Viser plakaten dersom den er tilgjengelig
-                ) : (
-                    <p>Ingen plakat tilgjengelig</p> // En ekstra sjekk dersom "N/A" ikke er gydlig
-                )}
+                    <img 
+                    src={movie.Poster !== "N/A" ? movie.Poster : "/no-poster.png"} 
+                    alt={movie.Title} 
+                    onError={(e) => {e.currentTarget.src = "/no-poster.png"}}/> 
                 <h2>{movie.Title}</h2>
                 <p>{movie.Year}</p>
-                <p>{movie.Type}</p>
             </Link>
         </article>
     )

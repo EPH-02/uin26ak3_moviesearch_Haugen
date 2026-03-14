@@ -42,7 +42,7 @@ export default function Home(){
 
     // Laster en startliste slik at forsiden ikke er tom første gang appen åpnes.
     useEffect(() => {
-        fetchMovies("james bond 007")
+        fetchMovies("james bond")
     }, [])
 
     const getMovies = async()=>{

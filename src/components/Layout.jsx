@@ -6,13 +6,11 @@ export default function Layout({children}){
         <header>
             <nav>
                 <Link to="/">Hjem</Link>
-                <Link to="Movie">Filmer</Link>
             </nav>
         </header>
         
-        <main>
             {children}
-        </main>
+
         </>
     )
 }
