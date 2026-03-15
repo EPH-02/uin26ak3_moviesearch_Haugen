@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react"
 import MovieCard from "../components/MovieCard"
 
-
+// Forside som håndterer søk og visning av filmer fra OMDb API
 export default function Home(){
-    const [search, setSearch] = useState("")
-    const [searchResults, setSearchResult] = useState([])
-    const [errorMessage, setErrorMessage] = useState("")
-    const trimmedSearch = search.trim()
-    // Hindrer API-kall før brukeren faktisk har skrevet et meningsfullt søk.
-    const canSearch = trimmedSearch.length >= 3
-    const apiKey = import.meta.env.VITE_OMBD_API_KEY
+    const [search, setSearch] = useState("") // State for søkefeltet
+    const [searchResults, setSearchResult] = useState([]) // State for søkeresultater hentet fra API
+    const [errorMessage, setErrorMessage] = useState("") 
+    const trimmedSearch = search.trim() // Fjerner whitespace slik at tomme søk ikke trigges
+    const canSearch = trimmedSearch.length >= 3 // Sjekker om brukeren har skrevet nok til å trigge søk
+    const apiKey = import.meta.env.VITE_OMBD_API_KEY 
 
-    const fetchMovies = async(query)=>{ // Funksjon for å hente filmer fra API 
+    // Henter filmer fra OMDb basert på tittel
+    // Hvis API returnerer feil, vis melding og stopp videre rendering
+    // Fjerner duplikater basert på imdbID før visning
+    const fetchMovies = async(query)=>{ 
         try{
             setErrorMessage("")
             // encodeURIComponent gjør at søk med mellomrom og spesialtegn blir gyldige i URL-en.
@@ -40,7 +42,7 @@ export default function Home(){
         }
     }
 
-    // Laster en startliste slik at forsiden ikke er tom første gang appen åpnes.
+    // Henter en standardliste første gang siden lastes
     useEffect(() => {
         fetchMovies("james bond")
     }, [])
@@ -50,7 +52,8 @@ export default function Home(){
 
         fetchMovies(trimmedSearch)
     }
-    
+    // Hindrer default form-submit og håndterer søk manuelt
+    // Filtrerer og fjerner duplikater basert på imdbID før visning
     const handleChange = (e)=>{
         setSearch(e.target.value)
     }
