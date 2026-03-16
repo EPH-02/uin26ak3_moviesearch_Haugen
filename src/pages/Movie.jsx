@@ -3,16 +3,16 @@ import { useParams, useLocation } from "react-router-dom"
 
 // Side for detaljert visning av valgt film
 export default function Movie(){
-    const { movieId } = useParams() // movieId er imdbID
+    const { movieId } = useParams() // Henter movieId fra URL-parametere
     const location = useLocation() // Henter state fra navigation (hvis tilgjengelig)
 
     const imdbID = location.state?.imdbID || movieId // Fallback til URL-parametere dersom state ikke er tilgjengelig, for bedre støtte ved direkte URL-tilgang.
 
-    const [movie, setMovie] = useState(null) 
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(null)
+    const [movie, setMovie] = useState(null) // State som lagrer informasjon om filmen
+    const [loading, setLoading] = useState(false) // State som indikere at data hentes
+    const [error, setError] = useState(null) // State lagrer feil dersom det oppstår under datahenting
 
-    const apiKey = import.meta.env.VITE_OMBD_API_KEY
+    const apiKey = import.meta.env.VITE_OMBD_API_KEY // API-nøkkel 
 
     // Henter detaljert filminformasjon fra OMDb
     // Setter loading før fetch starter
