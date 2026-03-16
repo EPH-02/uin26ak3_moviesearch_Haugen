@@ -45,8 +45,7 @@ export default function Movie(){
                 <h1>{movie?.Title ?? "Movie"}</h1>
             <img 
                 src={movie?.Poster !== "N/A" ? movie.Poster : "/no-poster.png"} 
-                alt={`Plakat for ${movie.Title}`}
-                onError={(e) => {e.currentTarget.src = "/no-poster.png"}} />
+                alt={`Plakat for ${movie.Title}`}/>
          
                 <section>
                     <p><strong>År:</strong> {movie?.Year}</p>
