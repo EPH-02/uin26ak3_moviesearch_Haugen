@@ -26,7 +26,7 @@ export default function Home(){
                 return
             }
 
-            // Filtrerer bort spill og dedupliserer på imdbID før rendering.
+            // Filtrerer bort spill og deduplikater på imdbID før rendering.
             const uniqueMovies = Array.from(
                 new Map(
                     (data.Search ?? [])
