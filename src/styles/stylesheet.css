@@ -93,3 +93,7 @@ a {
   text-decoration: none;
   color: inherit;
 }
+
+.movieDetail {
+  padding: 1rem;
+}

@@ -41,7 +41,7 @@ export default function Movie(){
         if (!movie) return null
 
     return(
-            <article>
+            <article className="movieDetail">
                 <h1>{movie?.Title ?? "Movie"}</h1>
             <img 
                 src={movie?.Poster !== "N/A" ? movie.Poster : "/no-poster.png"} 

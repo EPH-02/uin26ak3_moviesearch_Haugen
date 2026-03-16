@@ -5,10 +5,10 @@ import MovieCard from "../components/MovieCard"
 export default function Home(){
     const [search, setSearch] = useState("") // State for søkefeltet
     const [searchResults, setSearchResult] = useState([]) // State for søkeresultater hentet fra API
-    const [errorMessage, setErrorMessage] = useState("") 
+    const [errorMessage, setErrorMessage] = useState("") // State som viser feil ved mislykket søk eller API-feil
     const trimmedSearch = search.trim() // Fjerner whitespace slik at tomme søk ikke trigges
     const canSearch = trimmedSearch.length >= 3 // Sjekker om brukeren har skrevet nok til å trigge søk
-    const apiKey = import.meta.env.VITE_OMBD_API_KEY 
+    const apiKey = import.meta.env.VITE_OMBD_API_KEY // API-nøkkel
 
     // Henter filmer fra OMDb basert på tittel
     // Hvis API returnerer feil, vis melding og stopp videre rendering

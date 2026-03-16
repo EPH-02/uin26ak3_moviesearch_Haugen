@@ -10,8 +10,7 @@ export default function MovieCard({ movie }){
                     <img 
                     // Fallback hvis poster mangler eller feiler å laste på 
                     src={movie.Poster !== "N/A" ? movie.Poster : "/no-poster.png"} 
-                    alt={movie.Title} 
-                    onError={(e) => {e.currentTarget.src = "/no-poster.png"}}/> 
+                    alt={"Mangler plakat for " + movie.Title}/> 
                 <h2>{movie.Title}</h2>
                 <p>{movie.Year}</p>
             </Link>
