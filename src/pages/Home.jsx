@@ -44,7 +44,7 @@ export default function Home(){
 
     // Henter en standardliste første gang siden lastes
     useEffect(() => {
-        fetchMovies("james bond")
+        fetchMovies("james bond 007")
     }, [])
 
     const getMovies = async()=>{
